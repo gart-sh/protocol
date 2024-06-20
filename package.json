@@ -1,5 +1,5 @@
 {
-  "name": "protocol",
+  "name": "@gart-sh/protocol",
   "version": "1.0.0",
   "description": "js/ts library to connect to the gateway and authenticate",
   "main": "dist/index.js",
