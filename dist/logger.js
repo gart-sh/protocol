@@ -15,20 +15,15 @@ var LogLevel;
 const GLOAL_LOG_SETTINGS = {
     consoleLogLevel: LogLevel.INFO,
     debugEnabled: process.env.DEBUG === "true" || process.env.DEBUG_LOGS === "true",
-    colorEnabled: true,
     ignoreMethods: []
 };
 class GlobalLogger {
     static init(options) {
         GLOAL_LOG_SETTINGS.consoleLogLevel = options?.consoleLogLevel ?? GLOAL_LOG_SETTINGS.consoleLogLevel;
         GLOAL_LOG_SETTINGS.debugEnabled = options?.debugEnabled ?? GLOAL_LOG_SETTINGS.debugEnabled;
-        GLOAL_LOG_SETTINGS.colorEnabled = options?.colorEnabled ?? GLOAL_LOG_SETTINGS.colorEnabled;
         GLOAL_LOG_SETTINGS.ignoreMethods = options?.ignoreMethods ?? GLOAL_LOG_SETTINGS.ignoreMethods;
         if (GLOAL_LOG_SETTINGS.debugEnabled) {
             console.log(chalk_1.default.blue.bold("[DEBUG] ") + chalk_1.default.blue("Debug mode enabled"));
-        }
-        if (!GLOAL_LOG_SETTINGS.colorEnabled) {
-            chalk_1.default.supportsColor = false;
         }
     }
     static debug(method, ...message) {

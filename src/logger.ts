@@ -10,13 +10,11 @@ export enum LogLevel {
 const GLOAL_LOG_SETTINGS: {
     consoleLogLevel: LogLevel;
     debugEnabled: boolean;
-    colorEnabled: boolean;
     ignoreMethods: string[];
 } = {
     // 0 : info, 1 : warn, 2 : error
     consoleLogLevel: LogLevel.INFO,
     debugEnabled: process.env.DEBUG === "true" || process.env.DEBUG_LOGS === "true",
-    colorEnabled: true,
     ignoreMethods: []
 };
 
@@ -24,21 +22,15 @@ export default class GlobalLogger {
     public static init(options?: {
         consoleLogLevel?: LogLevel;
         debugEnabled?: boolean;
-        colorEnabled?: boolean;
         ignoreMethods?: string[];
     }) {
         GLOAL_LOG_SETTINGS.consoleLogLevel = options?.consoleLogLevel ?? GLOAL_LOG_SETTINGS.consoleLogLevel;
         GLOAL_LOG_SETTINGS.debugEnabled = options?.debugEnabled ?? GLOAL_LOG_SETTINGS.debugEnabled;
-        GLOAL_LOG_SETTINGS.colorEnabled = options?.colorEnabled ?? GLOAL_LOG_SETTINGS.colorEnabled;
         GLOAL_LOG_SETTINGS.ignoreMethods = options?.ignoreMethods ?? GLOAL_LOG_SETTINGS.ignoreMethods;
 
         // announce that we're in debug mode
         if (GLOAL_LOG_SETTINGS.debugEnabled) {
             console.log(chalk.blue.bold("[DEBUG] ") + chalk.blue("Debug mode enabled"));
-        }
-
-        if (!GLOAL_LOG_SETTINGS.colorEnabled) {
-            chalk.supportsColor = false;
         }
     }
 

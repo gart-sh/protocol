@@ -8,7 +8,6 @@ export default class GlobalLogger {
     static init(options?: {
         consoleLogLevel?: LogLevel;
         debugEnabled?: boolean;
-        colorEnabled?: boolean;
         ignoreMethods?: string[];
     }): void;
     static debug(method: string, ...message: any[]): void;
