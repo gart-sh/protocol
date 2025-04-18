@@ -1,10 +1,5 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const channel_js_1 = __importDefault(require("./channel.js"));
-class CallbackChannel extends channel_js_1.default {
+import Channel from "./channel.js";
+export default class CallbackChannel extends Channel {
     constructor(name, options) {
         super(name, options);
     }
@@ -34,5 +29,4 @@ class CallbackChannel extends channel_js_1.default {
         });
     }
 }
-exports.default = CallbackChannel;
 //# sourceMappingURL=callbackChannel.js.map

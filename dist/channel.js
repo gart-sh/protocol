@@ -1,16 +1,14 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const logger_js_1 = require("./logger.js");
-const typedEmitter_js_1 = __importDefault(require("./typedEmitter.js"));
-class Channel extends typedEmitter_js_1.default {
+import { Logger } from "./logger.js";
+import TypedEmitter from "./typedEmitter.js";
+export default class Channel extends TypedEmitter {
+    name;
+    options;
+    logger;
     constructor(name, options) {
         super();
         this.name = name;
         this.options = options;
-        this.logger = new logger_js_1.Logger(name);
+        this.logger = new Logger(name);
     }
     send(client, event, data) {
         if (!this.options?.disableLogs)
@@ -25,5 +23,4 @@ class Channel extends typedEmitter_js_1.default {
         });
     }
 }
-exports.default = Channel;
 //# sourceMappingURL=channel.js.map

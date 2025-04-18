@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "js/ts library to connect to the gateway and authenticate",
   "main": "dist/index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gart-sh/protocol.git"

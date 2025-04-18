@@ -1,4 +1,4 @@
-import CallbackChannel from "../callbackChannel";
+import CallbackChannel from "../callbackChannel.js";
 export declare const PingChannel: CallbackChannel<{
     ping: {
         request: {

@@ -1,1 +1,1 @@
-{"version":3,"file":"subscriberChannel.js","sourceRoot":"","sources":["../../src/channels/subscriberChannel.ts"],"names":[],"mappings":";;;;;;AAAA,yEAAiD;AAGpC,QAAA,iBAAiB,GAAG,IAAI,yBAAe,CAiBjD,YAAY,CAAC,CAAC"}
+{"version":3,"file":"subscriberChannel.js","sourceRoot":"","sources":["../../src/channels/subscriberChannel.ts"],"names":[],"mappings":"AAAA,OAAO,eAAe,MAAM,uBAAuB,CAAC;AAEpD,MAAM,CAAC,MAAM,iBAAiB,GAAG,IAAI,eAAe,CAiBjD,YAAY,CAAC,CAAC"}

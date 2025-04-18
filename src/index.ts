@@ -1,7 +1,7 @@
-export { default as Client } from "./client";
-export { default as GlobalLogger } from "./logger";
-export { Logger } from "./logger";
-export { default as Channel } from "./channel";
-export { default as CallbackChannel } from "./callbackChannel";
-export { SubscriberChannel } from "./channels/subscriberChannel";
-export { PingChannel } from "./channels/pingChannel";
+export { default as Client } from "./client.js";
+export { default as GlobalLogger } from "./logger.js";
+export { Logger } from "./logger.js";
+export { default as Channel } from "./channel.js";
+export { default as CallbackChannel } from "./callbackChannel.js";
+export { SubscriberChannel } from "./channels/subscriberChannel.js";
+export { PingChannel } from "./channels/pingChannel.js";

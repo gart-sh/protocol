@@ -3,10 +3,10 @@
 	"compilerOptions": {
 		"tsBuildInfoFile": "./dist/.tsbuildinfo",
 		"incremental": true,
-		"target": "ES2020",
-		"module": "commonjs",
+		"target": "ES2022",
+		"module": "Node16",
 		"rootDir": "./src",
-		"moduleResolution": "Node",
+		"moduleResolution": "Node16",
 		"resolveJsonModule": true,
 		"allowJs": true,
 		"declaration": true,

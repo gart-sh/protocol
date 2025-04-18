@@ -1,5 +1,4 @@
-import CallbackChannel from "../callbackChannel";
-import Client from "../client";
+import CallbackChannel from "../callbackChannel.js";
 
 export const SubscriberChannel = new CallbackChannel<{
     "channel:subscribe": {
