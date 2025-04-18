@@ -1,10 +1,10 @@
-import Channel from "./channel"
-import Client from "./client"
+import Channel, { ChannelOptions } from "./channel.js"
+import Client from "./client.js"
 
 export interface MessageResponse<T> {
     sender: string,
     timestamp: number,
-    reqeustId: string,
+    requestId: string,
     data: T,
 }
 
@@ -23,13 +23,15 @@ export default class CallbackChannel<DataType extends
         [eventName in keyof DataType]: (data: DataType[eventName]["request"]) => Promise<DataType[eventName]["response"]>
     }> {
 
-    constructor(name: string) {
-        super(name)
+    constructor(name: string, options?: ChannelOptions) {
+        super(name, options)
     }
 
     public send<K extends keyof DataType>(client: Client, event: K, data: DataType[K]["request"]): Promise<MessageResponse<DataType[K]["response"]>> {
         return new Promise<DataType[K]["response"]>((resolve, reject) => {
             const requestId = Math.random().toString(36).substr(2, 9)
+            if (!this.options?.disableLogs) this.logger.debug(`/-> ${event as string} ${JSON.stringify(data)}`)
+
             client.socket.emit(this.name, {
                 event, data: {
                     requestId,

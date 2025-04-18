@@ -1,10 +1,10 @@
 import { Socket, io } from "socket.io-client";
-import TypedEmitter, { EventList } from "./typedEmitter";
-import Channel from "./channel";
-import CallbackChannel from "./callbackChannel";
-import { SubscriberChannel } from "./channels/subscriberChannel";
-import { PingChannel } from "./channels/pingChannel";
-import { Logger } from "./logger";
+import TypedEmitter, { EventList } from "./typedEmitter.js";
+import Channel from "./channel.js";
+import CallbackChannel from "./callbackChannel.js";
+import { SubscriberChannel } from "./channels/subscriberChannel.js";
+import { PingChannel } from "./channels/pingChannel.js";
+import GlobalLogger, { Logger } from "./logger.js";
 
 interface ClientEvents {
     [key: string]: (...args: any[]) => void;
@@ -16,23 +16,18 @@ interface SocketEvents {
     [key: string]: any
 }
 
-
-
-
 export default class Client extends TypedEmitter<ClientEvents> {
-
-    public static readonly baseUrl = "https://gart.sh";
-    public static readonly path = "/socket";
 
     public socket: Socket<SocketEvents, SocketEvents>;
     public channels: Record<string, Channel | CallbackChannel> = {};
+    public subscriptions: Set<string> = new Set();
 
     public logger = new Logger("Protocol");
 
-    constructor() {
+    constructor(public readonly host: string = "https://gart.sh", public readonly path: string = "/socket") {
         super();
-        this.socket = io(Client.baseUrl, {
-            path: Client.path,
+        this.socket = io(host, {
+            path: path,
             reconnection: true,
             timeout: 10000,
         })
@@ -43,24 +38,32 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
         this.socket.on("disconnect", () => {
             this.emit("disconnect")
+
+            // on the possibility of a disconnect, the gateway may have restarted.
+            // we should clear all channels and resubscribe once we reconnect.
+            this.channels = {};
+            this.subscriptions.clear();
         });
 
         this.registerChannel(SubscriberChannel);
 
         this.socket.onAny((channel, message) => {
-            if (this.channels[channel]) {
-
-                (this.channels[channel] as Channel<any>).emit(message.event, message.data);
+            const channelInstance = this.channels[channel] as Channel<any>
+            if (channelInstance) {
+                if (!channelInstance?.options?.disableLogs) GlobalLogger.debug(channel, `<- ${message.event} ${JSON.stringify(message.data)}`);
+                channelInstance.emit(message.event, message.data);
             }
         })
 
         setInterval(() => {
             this.send(PingChannel, "ping", {
                 message: "ping"
-            }).then((response) => {
-
             })
         }, 10000)
+
+        this.on("error", (error) => {
+            this.logger.error(error);
+        })
 
         this.socket.connect();
     }
@@ -73,20 +76,32 @@ export default class Client extends TypedEmitter<ClientEvents> {
         this.socket.disconnect();
     }
 
-    public subscribe<T extends EventList>(channel: string, key?: string): Channel<T> {
+    public subscribe<T extends EventList>(channel: string | Channel<any> | CallbackChannel<any>, key?: string): Channel<T> {
+        if (typeof channel === "object") {
+            channel = channel.name;
+        }
+
+        this.subscriptions.add(channel);
+
         if (this.channels[channel]) {
             return this.channels[channel] as Channel<T>;
         }
 
         this.channels[channel] = new Channel<T>(channel);
-        (this.channels["subscriber"] as CallbackChannel).send(this, "channel:subscribe", { channel, key });
+        SubscriberChannel.send(this, "channel:subscribe", { channel, key });
 
         return this.channels[channel] as Channel<T>;
     }
 
-    public unsubscribe(channel: string) {
+    public unsubscribe(channel: string | Channel<any> | CallbackChannel<any>) {
+        if (typeof channel === "object") {
+            channel = channel.name;
+        }
+
+        this.subscriptions.delete(channel);
+
         if (this.channels[channel]) {
-            (this.channels["subscriber"] as CallbackChannel).send(this, "channel:unsubscribe", { channel });
+            SubscriberChannel.send(this, "channel:unsubscribe", { channel });
             delete this.channels[channel];
         }
     }

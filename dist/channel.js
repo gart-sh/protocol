@@ -3,13 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const typedEmitter_1 = __importDefault(require("./typedEmitter"));
-class Channel extends typedEmitter_1.default {
-    constructor(name) {
+const logger_js_1 = require("./logger.js");
+const typedEmitter_js_1 = __importDefault(require("./typedEmitter.js"));
+class Channel extends typedEmitter_js_1.default {
+    constructor(name, options) {
         super();
         this.name = name;
+        this.options = options;
+        this.logger = new logger_js_1.Logger(name);
     }
     send(client, event, data) {
+        if (!this.options?.disableLogs)
+            this.logger.debug(`-> ${event} ${JSON.stringify(data)}`);
         client.socket.emit(this.name, { event, data });
     }
     onEvent(client, event, listener) {
