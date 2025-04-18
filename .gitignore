@@ -1,4 +1,5 @@
-dist
+# dist we actually want to keep so i can npm install the repo
+dist/.tsbuildinfo
 temp
 node_modules
 .env
